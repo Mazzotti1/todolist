@@ -1,10 +1,13 @@
-import Main from './pages/Main/Main';
+import React from 'react';
+import AppRouter from './context/Router';
+import { GlobalStyles } from './utils/GlobalStyles';
 
 const App = () => {
   return (
-      <div className="App">
-          <Main />
-      </div>
+      <>
+          <GlobalStyles />
+          <AppRouter />
+      </>
   );
 };
 
