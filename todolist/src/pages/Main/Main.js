@@ -40,13 +40,15 @@ const Main = () => {
 
     return (
         <MainContainer >
-            <TextContainer>
-                <h1>Olá!</h1>
-                <p>Vamos criar a primeira tarefa?</p>
-            </TextContainer>
-            <StyledButton onClick={handleNavigation}>
-                Bora!!!
-            </StyledButton>
+            <ContentContainer>
+                <TextContainer>
+                    <h1>Olá!</h1>
+                    <p>Vamos criar a primeira tarefa?</p>
+                </TextContainer>
+                <StyledButton onClick={handleNavigation}>
+                    Sobre
+                </StyledButton>
+            </ContentContainer>
             <TaskList tasks={tasks}/>
         </MainContainer>
     );
@@ -58,6 +60,15 @@ const MainContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 80vh;
+    color: #333;
+`;
+
+const ContentContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width:'100%';
     height: 80vh;
     color: #333;
 `;
@@ -80,6 +91,7 @@ const StyledButton = styled.button`
     cursor: pointer;
     margin-top:15px;
     margin-bottom:15px;
+    margin-left: 35px;
     transition: background-color 0.3s, transform 0.3s;
 
     &:hover {
