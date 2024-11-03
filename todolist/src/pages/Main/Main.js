@@ -42,8 +42,8 @@ const Main = () => {
         <MainContainer >
             <ContentContainer>
                 <TextContainer>
-                    <h1>Olá!</h1>
-                    <p>Vamos criar a primeira tarefa?</p>
+                    <h1>Mudando para o tutorial!</h1>
+                    <p>Adicionando para nova branch</p>
                 </TextContainer>
                 <StyledButton onClick={handleNavigation}>
                     Sobre
