@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
+
     * {
         margin: 0;
         padding: 0;
@@ -8,7 +9,7 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     body {
-        font-family: Arial, sans-serif;
+        font-family: 'Nunito', sans-serif;
         background-color: #f0f0f0;
         color: #333;
     }
