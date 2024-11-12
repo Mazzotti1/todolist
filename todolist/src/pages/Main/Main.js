@@ -55,16 +55,6 @@ const Main = () => {
     };
 
     return (
-<<<<<<< Updated upstream
-        <MainContainer >
-            <ContentContainer>
-                <TextContainer>
-                    <h1>Mudando para o tutorial!</h1>
-                    <p>Adicionando para nova branch</p>
-                </TextContainer>
-                <StyledButton onClick={handleNavigation}>
-                    Sobre
-=======
         <MainContainer>
         <ContentContainer>
             <TextContainer>
@@ -74,7 +64,6 @@ const Main = () => {
             <ButtonsRow>
                 <StyledButton onClick={handleNavigationAbout}>
                     Entenda mais sobre!
->>>>>>> Stashed changes
                 </StyledButton>
                 <StyledButton onClick={handleNavigationRanking}>
                     Ranking
