@@ -42,6 +42,7 @@ const Main = () => {
             setNewTask(''); 
         } catch (error) {
             //fazer um popUp generico na utils
+            //
             console.error('Erro ao criar tarefa:', error);
         }
     };
