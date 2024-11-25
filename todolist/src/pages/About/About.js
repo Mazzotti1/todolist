@@ -11,7 +11,7 @@ const About = () => {
                 <h1 style={{fontSize:'42px'}}>Desafie a si mesmo, supere a todos!</h1>
                 <p style={{fontSize:'28px'}}>Para transformar sua organização diária em um desafio envolvente, criamos esta Lista de Tarefas. À primeira vista, ela parece simples, mas nosso sistema de pontuação e ranking inspira você a ir além, competindo e conquistando novas metas a cada tarefa concluída!</p>
                 <BookIcon style={{width:400, height:200}}></BookIcon>
-                <p style={{fontSize:'22px'}}>Desenvolvido por Gabriel Mazzotti, Joao Vitor Nunes, Joao Pedro Carneiro e Cristian</p>
+                <p style={{fontSize:'22px'}}>Desenvolvido por Gabriel Mazzotti, Joao Vitor Nunes, Joao Pedro Carneiro e Crysthian Pimentel dos Santos.</p>
             </TextContainer>
         </ContentContainer>
     </MainContainer>
