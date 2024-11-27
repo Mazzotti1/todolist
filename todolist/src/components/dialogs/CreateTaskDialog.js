@@ -4,6 +4,9 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, C
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import {createTask } from '../../services/apiService';
+import { usePopup } from '../../utils/Popup';
+import RegisterDialog from './RegisterDialog';
 
 const CreateTaskDialog = ({ open, handleClose }) => {
 
@@ -14,6 +17,9 @@ const CreateTaskDialog = ({ open, handleClose }) => {
     const [priority, setPriority] = useState('');
     const [category, setCategory] = useState('');
     const [dueDate, setDueDate] = useState(null);
+    const [openRegisterDialog, setOpenRegisterDialog] = useState(false);
+
+    const { showPopup } = usePopup();
 
     useEffect(() => {
         if (!open) { 
@@ -54,6 +60,65 @@ const CreateTaskDialog = ({ open, handleClose }) => {
     const handleCategoryChange = (event) => {
         setCategory(event.target.value);
     };
+
+    const openRegister = () => {
+        setOpenRegisterDialog(true);
+      };
+    
+      const closeRegisterDialog = () => {
+        setOpenRegisterDialog(false);
+      };
+
+    const handleCreateTask = async () => {
+
+        if(!title){
+            showPopup("Preencha o titulo da tarefa", 'error'); 
+            return;
+        }
+
+        if (!dueDate || new Date(dueDate) <= new Date()) {
+            showPopup("Preencha a data com um dia posterior ao dia de hoje.", 'error');
+            return;
+        }
+
+        if (!localStorage.getItem('session')) {
+            openRegister();
+            return;
+        }
+
+        const newTaskData = {
+            title,
+            description,
+            tags,
+            isCompleted,
+            priority,
+            category,
+            dueDate
+        };
+
+        try {
+            const createdTask = await createTask(newTaskData);
+            
+            if(createdTask){
+                setTitle('');
+                setDescription('');
+                setTags([]);
+                setIsCompleted(false);
+                setPriority('');
+                setCategory('');
+                setDueDate(null);
+                handleClose();
+
+                showPopup('Tarefa criada com sucesso!', 'success'); 
+            }
+
+        } catch (error) {
+            showPopup(error.response.data.error, 'error'); 
+        }
+    };
+
+
+    
 
     return (
         <Dialog open={open} 
@@ -158,6 +223,7 @@ const CreateTaskDialog = ({ open, handleClose }) => {
                         value={dueDate}
                         onChange={(newDate) => setDueDate(newDate)}  
                         renderInput={(params) => <TextField {...params} fullWidth margin="normal" />}
+                        format="dd/MM/yyyy"
                         sx={{ marginTop: '16px' }}
                     />
                 </LocalizationProvider>
@@ -166,10 +232,15 @@ const CreateTaskDialog = ({ open, handleClose }) => {
                 <Button onClick={handleClose} color="primary">
                     Cancelar
                 </Button>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleCreateTask} color="primary">
                     Adicionar
                 </Button>
             </DialogActions>
+            <RegisterDialog 
+                open={openRegisterDialog} 
+                onClose={closeRegisterDialog} 
+                onRegister={closeRegisterDialog} 
+            />
         </Dialog>
     );
 };

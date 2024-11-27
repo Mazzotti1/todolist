@@ -1,8 +1,8 @@
 // app.js
-const express = require('express');
-const taskRoutes = require('./routes/TaskRoutes');
-const userRoutes = require('./routes/UserRoutes');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
+import taskRoutes from './routes/TaskRoutes.js';
+import userRoutes from './routes/UserRoutes.js';
 
 const app = express();
 
@@ -13,4 +13,4 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/user', userRoutes);  
 
 
-module.exports = app;
+export default app;

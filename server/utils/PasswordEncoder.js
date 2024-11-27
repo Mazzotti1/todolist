@@ -1,14 +1,13 @@
-const bcrypt = require('bcrypt');
+// Alteração no arquivo PasswordEncoder.js
+import { hash, compare } from 'bcrypt';
 
-async function hashPassword(plainPassword) {
+export async function hashPassword(plainPassword) {
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+    const hashedPassword = await hash(plainPassword, saltRounds);
     return hashedPassword;
 }
 
-async function checkPassword(plainPassword, hashedPassword) {
-    const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
+export async function checkPassword(plainPassword, hashedPassword) {
+    const isMatch = await compare(plainPassword, hashedPassword);
     return isMatch;
 }
-
-module.exports = { hashPassword, checkPassword };

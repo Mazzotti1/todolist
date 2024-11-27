@@ -6,12 +6,14 @@ import TaskList from '../../components/tasks/TaskList';
 import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import CreateTaskDialog from '../../components/dialogs/CreateTaskDialog';
+import { usePopup } from '../../utils/Popup';
 
 const Main = () => {
     const [tasks, setTasks] = useState([]);
-    const [newTask, setNewTask] = useState('');
     const navigate = useNavigate();
     const [openTaskDialog, setOpenTaskDialog] = useState(false);
+
+    const { showPopup } = usePopup();
 
     const handleClickOpenDialog = () => {
         setOpenTaskDialog(true);
@@ -28,24 +30,11 @@ const Main = () => {
                 const tasksData = await getTasks();
                 setTasks(tasksData);
             } catch (error) {
-                //fazer um popUp generico na utils
-                console.error('Erro ao buscar tarefas:', error);
+                showPopup(error.response.data.error, 'error'); 
             }
         };
         fetchTasks();
     }, []);
-
-    const handleCreateTask = async () => {
-        try {
-            const createdTask = await createTask({ title: newTask });
-            setTasks([...tasks, createdTask]);
-            setNewTask(''); 
-        } catch (error) {
-            //fazer um popUp generico na utils
-            //
-            console.error('Erro ao criar tarefa:', error);
-        }
-    };
 
     const handleNavigationAbout = () => {
         navigate('/about'); 

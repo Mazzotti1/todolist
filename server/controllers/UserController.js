@@ -1,5 +1,5 @@
-const userService = require('../services/UserService');
-const { hashPassword } = require('../utils/PasswordEncoder');
+import * as userService from '../services/UserService.js';
+import { hashPassword } from '../utils/PasswordEncoder.js';
 
 const createUser = async (req, res) => {
     const { name, password, updateAt } = req.body;
@@ -7,17 +7,21 @@ const createUser = async (req, res) => {
 
         const userExists = await userService.checkUsername(name);
         
-        if(userExists){
+        if (userExists) {
             return res.status(409).json({ error: 'O nome de usuário já está em uso.' });
         }
         
         const hashedPassword = await hashPassword(password);
 
         const user = await userService.createUser(name, hashedPassword, updateAt);
-        res.status(201).json(user);
+
+        const { password: _, ...userWithoutPassword } = user; 
+
+        
+         res.status(201).json(userWithoutPassword);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Erro ao criar o usuario.' });
+        res.status(500).json({ error: 'Erro ao criar o usuário.' });
     }
 };
 
@@ -27,8 +31,24 @@ const getUsers = async (req, res) => {
         res.json(users);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Erro ao buscar os usuarios' });
+        res.status(500).json({ error: 'Erro ao buscar os usuários.' });
     }
 };
 
-module.exports = { createUser, getUsers };
+const login = async (req, res) => {
+    const { name, password} = req.body;
+    try {
+        const response = await userService.login(name, password);
+        
+        if (response) {
+            res.status(200).json({ status: true, message: "Usuário logado com sucesso", data:response.id });
+        } else {
+            res.status(200).json({ status: false, message: "Usuário ou senha incorretos", data:{} });
+        }
+       
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao realizar login do usuário.' });
+    }
+}
+
+export default { createUser, getUsers, login };

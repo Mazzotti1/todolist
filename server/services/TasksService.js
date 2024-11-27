@@ -1,9 +1,8 @@
-const prisma = require('../models/prismaClient')
-
+import prisma from '../models/prismaClient.js';
 
 async function createTask(title, description, priority, category, dueDate, tags, assignedTo, updatedAt) {
     return await prisma.task.create({
-        data: { title, description, priority, category, dueDate, tags, assignedTo, updatedAt},
+        data: { title, description, priority, category, dueDate, tags, assignedTo, updatedAt },
     });
 }
 
@@ -19,4 +18,4 @@ async function getTasksByUser(name) {
     });
 }
 
-module.exports = { createTask, getTasks, getTasksByUser };
+export { createTask, getTasks, getTasksByUser };  

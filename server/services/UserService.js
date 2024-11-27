@@ -1,18 +1,30 @@
-const prisma = require('../models/prismaClient')
+import prisma from '../models/prismaClient.js';
+import { compare } from 'bcrypt';
 
-async function createUser(name, password, updatedAt) {
+export async function createUser(name, password, updatedAt) {
     return await prisma.user.create({
         data: { name, password, updatedAt },
     });
 }
 
-async function getUsers() {
+export async function getUsers() {
     return await prisma.user.findMany();
 }
 
-async function checkUsername(name) {
+export async function checkUsername(name) {
     return await prisma.user.findUnique({
         where: { name },
     });
 }
-module.exports = { createUser, getUsers, checkUsername };
+
+export async function login(name, password) {
+    const user = await prisma.user.findUnique({
+        where: { name },
+    });
+
+    if (!user) return null;
+
+    const isPasswordCorrect = await compare(password, user.password);
+
+    return isPasswordCorrect ? user : null;
+}

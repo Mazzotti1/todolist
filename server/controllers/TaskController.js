@@ -1,4 +1,4 @@
-const taskService = require('../services/TasksService');
+import * as taskService from '../services/TasksService.js';
 
 const createTask = async (req, res) => {
     const { title, description, priority, category, dueDate, tags, assignedTo, updatedAt } = req.body;
@@ -33,14 +33,13 @@ const getTasksByUser = async (req, res) => {
 
         if(tasks.length > 0){
             res.json(tasks);
-        }else {
+        } else {
             res.json({ resultado: 'Nenhuma tarefa encontrada.' });
         }
 
-
     } catch (error) {
-        res.status(500).json({error: 'Erro ao buscar as tarefas do usuario'})
+        res.status(500).json({error: 'Erro ao buscar as tarefas do usuário'});
     }
-}
+};
 
-module.exports = { createTask, getTasks, getTasksByUser };
+export default { createTask, getTasks, getTasksByUser };
