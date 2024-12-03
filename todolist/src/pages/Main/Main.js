@@ -16,6 +16,7 @@ const Main = () => {
     const [tasks, setTasks] = useState([]);
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [triggerEffect, setTriggerEffect] = useState(false);
 
     const navigate = useNavigate();
     const [openTaskDialog, setOpenTaskDialog] = useState(false);
@@ -46,8 +47,9 @@ const Main = () => {
                 showPopup(error.response.data.error, 'error'); 
             }
         };
+
         fetchTasks();
-    }, []);
+    }, [triggerEffect]);
 
     const handleNavigationAbout = () => {
         navigate('/about'); 
@@ -59,6 +61,7 @@ const Main = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('session');
+        setTriggerEffect((prev) => !prev);
     };
 
     const openRegister = () => {
@@ -66,7 +69,8 @@ const Main = () => {
     };
     
     const closeRegisterDialog = () => {
-    setOpenRegisterDialog(false);
+        setOpenRegisterDialog(false);
+        setTriggerEffect((prev) => !prev);
     };
 
     const handleSearchChange = (event) => {
@@ -126,11 +130,11 @@ const Main = () => {
         </ContentContainer>
         <TaskList tasks={filteredTasks} />
 
-        <CreateTaskDialog open={openTaskDialog} handleClose={handleCloseDialog}  onTaskCreated={handleTaskCreated}/>
+        <CreateTaskDialog open={openTaskDialog} handleClose={handleCloseDialog} onTaskCreated={handleTaskCreated}/>
         <RegisterDialog 
-                open={openRegisterDialog} 
-                onClose={closeRegisterDialog} 
-                onRegister={closeRegisterDialog} 
+            open={openRegisterDialog} 
+            onClose={closeRegisterDialog} 
+            onRegister={closeRegisterDialog} 
         />
     </MainContainer>
     );
