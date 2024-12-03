@@ -1,16 +1,16 @@
 import * as taskService from '../services/TasksService.js';
 
 const createTask = async (req, res) => {
-    const { title, description, priority, category, dueDate, tags, assignedTo, updatedAt } = req.body;
+    const { title, description, priority, category, dueDate, tags, completed, assignedTo, updatedAt } = req.body;
     try {
-        const task = await taskService.createTask(title, description, priority, category, dueDate, tags, assignedTo, updatedAt);
+        const task = await taskService.createTask(title, description, priority, category, dueDate, tags, completed ,assignedTo, updatedAt);
         res.status(201).json(task);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erro ao criar a tarefa.' });
     }
 };
-
+ 
 const getTasks = async (req, res) => {
     try {
         const tasks = await taskService.getTasks();
@@ -22,14 +22,14 @@ const getTasks = async (req, res) => {
 };
 
 const getTasksByUser = async (req, res) => {
-    const { name } = req.query;
+    const { id } = req.query;
 
-    if (!name) {
-        return res.status(400).json({ error: 'O nome do usuário é obrigatório.' });
+    if (!id) {
+        return res.status(400).json({ error: 'O id do usuário é obrigatório.' });
     }
 
     try {
-        const tasks = await taskService.getTasksByUser(name);
+        const tasks = await taskService.getTasksByUser(id);
 
         if(tasks.length > 0){
             res.json(tasks);

@@ -8,7 +8,7 @@ import {createTask } from '../../services/apiService';
 import { usePopup } from '../../utils/Popup';
 import RegisterDialog from './RegisterDialog';
 
-const CreateTaskDialog = ({ open, handleClose }) => {
+const CreateTaskDialog = ({ open, handleClose,  onTaskCreated}) => {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -63,11 +63,11 @@ const CreateTaskDialog = ({ open, handleClose }) => {
 
     const openRegister = () => {
         setOpenRegisterDialog(true);
-      };
+    };
     
-      const closeRegisterDialog = () => {
-        setOpenRegisterDialog(false);
-      };
+    const closeRegisterDialog = () => {
+    setOpenRegisterDialog(false);
+    };
 
     const handleCreateTask = async () => {
 
@@ -100,6 +100,8 @@ const CreateTaskDialog = ({ open, handleClose }) => {
             const createdTask = await createTask(newTaskData);
             
             if(createdTask){
+                onTaskCreated(createdTask);
+
                 setTitle('');
                 setDescription('');
                 setTags([]);
@@ -116,9 +118,6 @@ const CreateTaskDialog = ({ open, handleClose }) => {
             showPopup(error.response.data.error, 'error'); 
         }
     };
-
-
-    
 
     return (
         <Dialog open={open} 
@@ -157,29 +156,29 @@ const CreateTaskDialog = ({ open, handleClose }) => {
                     <h4>Tags</h4>
                     <div>
                         <Button 
-                            variant={tags.includes('fast') ? 'contained' : 'outlined'} 
-                            onClick={() => handleTagsChange('fast')}
+                            variant={tags.includes('Rápida') ? 'contained' : 'outlined'} 
+                            onClick={() => handleTagsChange('Rápida')}
                             style={{ marginRight: '8px' }}
                         >
                             Rápida
                         </Button>
                         <Button 
-                            variant={tags.includes('slow') ? 'contained' : 'outlined'} 
-                            onClick={() => handleTagsChange('slow')}
+                            variant={tags.includes('Devagar') ? 'contained' : 'outlined'} 
+                            onClick={() => handleTagsChange('Devagar')}
                             style={{ marginRight: '8px' }}
                         >
                             Lenta
                         </Button>
                         <Button 
-                            variant={tags.includes('easy') ? 'contained' : 'outlined'} 
-                            onClick={() => handleTagsChange('easy')}
+                            variant={tags.includes('Fácil') ? 'contained' : 'outlined'} 
+                            onClick={() => handleTagsChange('Fácil')}
                             style={{ marginRight: '8px' }}
                         >
                             Fácil
                         </Button>
                         <Button 
-                            variant={tags.includes('hard') ? 'contained' : 'outlined'} 
-                            onClick={() => handleTagsChange('hard')}
+                            variant={tags.includes('Difícil') ? 'contained' : 'outlined'} 
+                            onClick={() => handleTagsChange('Difícil')}
                         >
                             Difícil
                         </Button>
@@ -212,9 +211,9 @@ const CreateTaskDialog = ({ open, handleClose }) => {
                         onChange={handleCategoryChange}
                         label="Categoria"
                     >
-                        <MenuItem value="work">Trabalho</MenuItem>
-                        <MenuItem value="study">Estudo</MenuItem>
-                        <MenuItem value="leisure">Lazer</MenuItem>
+                        <MenuItem value="Trabalho">Trabalho</MenuItem>
+                        <MenuItem value="Estudo">Estudo</MenuItem>
+                        <MenuItem value="Lazer">Lazer</MenuItem>
                     </Select>
                 </FormControl>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>

@@ -12,10 +12,18 @@ const api = axios.create({
     timeout: 10000,
 });
 
-export const getTasks = async () => {
+export const getTasksById = async () => {
     try {
-        const response = await api.get('/tasks');
-        return response.data;
+        let session = JSON.parse(localStorage.getItem('session'));
+        let id = ''
+
+        if(session){
+            id = session.id;
+
+            const response = await api.get(`/tasks/byUser?id=${id}`);
+            return response.data;
+        }
+        return []
     } catch (error) {
         console.error('Erro ao buscar tarefas:', error);
         throw error;
@@ -26,7 +34,6 @@ export const createTask = async (taskData) => {
     try {
         let session = JSON.parse(localStorage.getItem('session'));
         let id = session.id;
-
         const formattedData = {
             title: taskData.title,
             description: taskData.description,
@@ -34,6 +41,7 @@ export const createTask = async (taskData) => {
             category: taskData.category,
             dueDate: new Date(taskData.dueDate).toISOString(),
             tags: taskData.tags,
+            completed: taskData.isCompleted,
             assignedTo: id,
             updatedAt: new Date().toISOString()
         };

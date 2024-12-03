@@ -1,17 +1,25 @@
 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getTasks, createTask } from '../../services/apiService';
+import { getTasksById, createTask } from '../../services/apiService';
 import TaskList from '../../components/tasks/TaskList';
 import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
+import { TextField } from '@mui/material';
 import CreateTaskDialog from '../../components/dialogs/CreateTaskDialog';
 import { usePopup } from '../../utils/Popup';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import RegisterDialog from '../../components/dialogs/RegisterDialog';
 
 const Main = () => {
     const [tasks, setTasks] = useState([]);
+    const [filteredTasks, setFilteredTasks] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+
     const navigate = useNavigate();
     const [openTaskDialog, setOpenTaskDialog] = useState(false);
+    const [openRegisterDialog, setOpenRegisterDialog] = useState(false);
 
     const { showPopup } = usePopup();
 
@@ -23,12 +31,17 @@ const Main = () => {
         setOpenTaskDialog(false);
     };
 
+    const handleTaskCreated = (newTask) => {
+        setTasks((prevTasks) => [...prevTasks, newTask]);
+        setFilteredTasks((prevTasks) => [...prevTasks, newTask]);
+    };
 
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const tasksData = await getTasks();
+                const tasksData = await getTasksById();
                 setTasks(tasksData);
+                setFilteredTasks(tasksData);
             } catch (error) {
                 showPopup(error.response.data.error, 'error'); 
             }
@@ -42,6 +55,26 @@ const Main = () => {
 
     const handleNavigationRanking = () => {
         navigate('/ranking'); 
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('session');
+    };
+
+    const openRegister = () => {
+        setOpenRegisterDialog(true);
+    };
+    
+    const closeRegisterDialog = () => {
+    setOpenRegisterDialog(false);
+    };
+
+    const handleSearchChange = (event) => {
+        const value = event.target.value;
+        setSearchTerm(value);
+
+        const filtered = tasks.filter((task) => task.title.toLowerCase().includes(value.toLowerCase()));
+        setFilteredTasks(filtered);
     };
 
     return (
@@ -58,16 +91,47 @@ const Main = () => {
                 <StyledButton onClick={handleNavigationRanking}>
                     Ranking
                 </StyledButton>
+
             </ButtonsRow>
             <LargeButton onClick={handleClickOpenDialog}>
                 <AddIcon style={{ marginRight: '8px' }} />
                 Adicionar tarefa
             </LargeButton>
+            <ButtonsRow>
+
+            {!localStorage.getItem('session') && (
+                <IconButton onClick={openRegister}>
+                    <LoginIcon style={{color:'green'}}/>
+                </IconButton>
+            )}
+
+            {localStorage.getItem('session') && (
+                <IconButton onClick={handleLogout}>
+                    <LogoutIcon style={{color:'red'}} />
+                </IconButton>
+            )}
+                
+            </ButtonsRow>
+
+            {localStorage.getItem('session') && (
+                <TextField
+                    label="Pesquisar Tarefa"
+                    variant="outlined"
+                    fullWidth
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    style={{ marginTop: '20px' }}
+                />
+            )}
         </ContentContainer>
-        <TaskList tasks={tasks} />
+        <TaskList tasks={filteredTasks} />
 
-        <CreateTaskDialog open={openTaskDialog} handleClose={handleCloseDialog}/>
-
+        <CreateTaskDialog open={openTaskDialog} handleClose={handleCloseDialog}  onTaskCreated={handleTaskCreated}/>
+        <RegisterDialog 
+                open={openRegisterDialog} 
+                onClose={closeRegisterDialog} 
+                onRegister={closeRegisterDialog} 
+        />
     </MainContainer>
     );
 };
@@ -112,6 +176,30 @@ const StyledButton = styled.button`
     color: white;
     border: none;
     width: 200px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    &:focus {
+        outline: none;
+    }
+`;
+
+const IconButton = styled.button`
+    background-color: #2C3E50;
+    color: white;
+    border: none;
+    width: 60px;
     border-radius: 5px;
     padding: 10px 20px;
     font-size: 16px;
