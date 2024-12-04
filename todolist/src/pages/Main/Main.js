@@ -17,6 +17,7 @@ const Main = () => {
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [triggerEffect, setTriggerEffect] = useState(false);
+    const [completed, setCompleted] = useState(false);
 
     const navigate = useNavigate();
     const [openTaskDialog, setOpenTaskDialog] = useState(false);
@@ -33,9 +34,10 @@ const Main = () => {
     };
 
     const handleTaskCreated = (newTask) => {
-        setTasks((prevTasks) => [...prevTasks, newTask]);
-        setFilteredTasks((prevTasks) => [...prevTasks, newTask]);
+        setTasks((prevTasks) => (Array.isArray(prevTasks) ? [...prevTasks, newTask] : [newTask]));
+        setFilteredTasks((prevTasks) => (Array.isArray(prevTasks) ? [...prevTasks, newTask] : [newTask]));
     };
+    
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -43,13 +45,14 @@ const Main = () => {
                 const tasksData = await getTasksById();
                 setTasks(tasksData);
                 setFilteredTasks(tasksData);
+                setCompleted(false);
             } catch (error) {
                 showPopup(error.response.data.error, 'error'); 
             }
         };
 
         fetchTasks();
-    }, [triggerEffect]);
+    }, [triggerEffect, completed]);
 
     const handleNavigationAbout = () => {
         navigate('/about'); 
@@ -128,7 +131,7 @@ const Main = () => {
                 />
             )}
         </ContentContainer>
-        <TaskList tasks={filteredTasks} />
+        <TaskList tasks={filteredTasks} setCompleted={setCompleted} />
 
         <CreateTaskDialog open={openTaskDialog} handleClose={handleCloseDialog} onTaskCreated={handleTaskCreated}/>
         <RegisterDialog 
@@ -142,12 +145,18 @@ const Main = () => {
 
 const MainContainer = styled.div`
     display: flex;
-    height: 80vh;
-    width: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #333;
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 `;
 
 const ContentContainer = styled.div`
@@ -155,25 +164,65 @@ const ContentContainer = styled.div`
     flex-direction: column;
     align-items: center;
     text-align: center;
-    color: #333;
     gap: 20px;
+    width: 100%;
+    max-width: 900px;
+
+    @media (max-width: 768px) {
+        gap: 15px;
+    }
+
+    @media (max-width: 480px) {
+        gap: 10px;
+    }
 `;
+
 
 const TextContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 900px;
+    width: 100%;
+    max-width: 900px;
     gap: 20px;
-    justify-content: center;
-    color: #333;
+
+    h1 {
+        font-size: 2em;
+
+        @media (max-width: 768px) {
+            font-size: 1.5em;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 1.2em;
+        }
+    }
+
+    p {
+        font-size: 1.2em;
+
+        @media (max-width: 768px) {
+            font-size: 1em;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 0.9em;
+        }
+    }
 `;
+
 
 const ButtonsRow = styled.div`
     display: flex;
     gap: 20px;
     justify-content: center;
+    flex-wrap: wrap;
+
+    @media (max-width: 480px) {
+        gap: 10px;
+    }
 `;
+
 
 const StyledButton = styled.button`
     background-color: #2C3E50;
@@ -190,14 +239,17 @@ const StyledButton = styled.button`
         background-color: #0056b3;
     }
 
-    &:active {
-        transform: scale(0.95);
+    @media (max-width: 768px) {
+        width: 150px;
+        font-size: 14px;
     }
 
-    &:focus {
-        outline: none;
+    @media (max-width: 480px) {
+        width: 120px;
+        font-size: 12px;
     }
 `;
+
 
 const IconButton = styled.button`
     background-color: #2C3E50;
@@ -224,27 +276,23 @@ const IconButton = styled.button`
 `;
 
 const LargeButton = styled(StyledButton)`
-    width: 25%;
+    width: 50%;
     height: 55px;
-    margin-top: 20px;
-    background-color: #4A90E2 !important;
     display: flex;
     align-items: center;
     justify-content: center;
 
-    &:hover {
-        background-color: #84BDFF !important;
-        color: black !important;
+    @media (max-width: 768px) {
+        width: 70%;
+        height: 50px;
     }
 
-    &:active {
-        transform: scale(0.95);
-    }
-
-    &:focus {
-        outline: none;
+    @media (max-width: 480px) {
+        width: 90%;
+        height: 45px;
     }
 `;
+
 
 
 export default Main;

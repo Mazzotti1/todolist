@@ -4,9 +4,6 @@ const API_BASE_URL = process.env.REACT_APP_ENV === 'PROD'
     ? process.env.REACT_APP_API_BASE_URL_PROD
     : process.env.REACT_APP_API_BASE_URL_LOCAL;
 
-console.log('API Base URL:', API_BASE_URL);
-
-
 const api = axios.create({
     baseURL: API_BASE_URL,
     timeout: 10000,
@@ -78,6 +75,20 @@ export const loginUser = async (name,password) => {
 
         const response = await api.post('/user/login', registerBody);
 
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const completeTask = async (id) => {
+    try {
+        const completeBody = {
+            id: id,
+        }
+
+        const response = await api.post('/tasks/complete', completeBody);
+        
         return response.data;
     } catch (error) {
         throw error;

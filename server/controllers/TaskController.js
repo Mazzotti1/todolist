@@ -42,4 +42,15 @@ const getTasksByUser = async (req, res) => {
     }
 };
 
-export default { createTask, getTasks, getTasksByUser };
+const setTaskCompleted = async (req, res) => {
+    const { id } = req.body;
+    try {
+        const result = await taskService.setCompleteTask(id);
+        res.status(201).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao completar a tarefa.' });
+    }
+};
+
+export default { createTask, getTasks, getTasksByUser, setTaskCompleted };

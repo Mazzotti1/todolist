@@ -18,4 +18,16 @@ async function getTasksByUser(id) {
     });
 }
 
-export { createTask, getTasks, getTasksByUser };  
+async function setCompleteTask(id) {
+    return await prisma.task.update({
+        where: {
+            id: id,
+        },
+        data:{
+            completed:true
+        }
+    });
+}
+
+
+export { createTask, getTasks, getTasksByUser, setCompleteTask };  

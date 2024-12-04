@@ -1,10 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
+import {completeTask } from '../../services/apiService';
+import { usePopup } from '../../utils/Popup';
 
-const TaskList = ({ tasks }) => {
+const TaskList = ({ tasks = [], setCompleted }) => {
+    const { showPopup } = usePopup();
+
+    if (!Array.isArray(tasks)) {
+        return;
+    }
 
     const sortedTasks = [...tasks].sort((a, b) => {
-        
         if (a.completed !== b.completed) {
             return a.completed - b.completed; 
         }
@@ -17,6 +23,19 @@ const TaskList = ({ tasks }) => {
 
         return a.priority - b.priority;
     });
+
+    const handleCompleteTask = async (task) => {
+        try {
+            const createdTask = await completeTask(task.id);
+
+            if(createdTask){
+                setCompleted(true);
+            }
+
+        } catch (error) {
+            showPopup(error.response.data.error, 'error'); 
+        }
+    }
 
     return (
         <ListContainer>
@@ -42,6 +61,12 @@ const TaskList = ({ tasks }) => {
                                 <Tag key={index}>{tag}</Tag>
                             ))}
                         </TagList>
+                        {!task.completed && (
+                            <StyledButton onClick={() => handleCompleteTask(task)}>
+                                Completar
+                            </StyledButton>
+                        )}
+
                     </StyledListItem>
                 ))}
             </StyledList>
@@ -56,7 +81,13 @@ const ListContainer = styled.div`
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow-x: auto;
-    width:1760px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 `;
 
 const StyledList = styled.ul`
@@ -65,11 +96,18 @@ const StyledList = styled.ul`
     display: flex;
     flex-direction: row; 
     gap: 15px;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 `;
+
 
 const StyledListItem = styled.li`
     min-width: 300px;
     flex-shrink: 0;
+    flex-grow: 1; /* Permite que os itens cresçam conforme o espaço disponível */
     padding: 20px;
     background-color: ${(props) => {
         switch (props.priority) {
@@ -84,31 +122,23 @@ const StyledListItem = styled.li`
         }
     }};
     border-radius: 5px;
-    border-left: 5px solid
-    ${(props) => {
-        switch (props.priority) {
-            case 1:
-                return '#842029';
-            case 2:
-                return '#856404';
-            case 3:
-                return '#0f5132';
-            default:
-                return '#6c757d'; 
-        }
-    }};
-    transition: transform 0.3s;
 
-    &:hover {
-        transform: scale(1.02);
+    @media (max-width: 768px) {
+        min-width: 100%; /* Ocupa toda a largura da tela em dispositivos menores */
     }
 `;
+
 
 const Header = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+
+    @media (max-width: 768px) {
+        flex-direction: column; /* Alinha o cabeçalho em uma coluna */
+        gap: 5px;
+    }
 `;
 
 const Title = styled.h3`
@@ -137,8 +167,11 @@ const Details = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-`;
 
+    @media (max-width: 768px) {
+        flex-direction: column; /* Detalhes em uma coluna no mobile */
+    }
+`;
 const PriorityTag = styled.span`
     font-size: 12px;
     color: #fff;
@@ -179,5 +212,37 @@ const Tag = styled.span`
     padding: 5px 8px;
     border-radius: 12px;
 `;
+
+const StyledButton = styled.button`
+    background-color: #05f04f;
+    color: white;
+    border: none;
+    width: 100%; /* Adapta à largura disponível */
+    max-width: 200px; /* Define um limite máximo */
+    border-radius: 5px;
+    padding: 0.8em;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top:15px;
+    
+    &:hover {
+        background-color: #3de070;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 0.9rem;
+        width: 100%; /* O botão ocupa toda a largura */
+    }
+`;
+
 
 export default TaskList;
