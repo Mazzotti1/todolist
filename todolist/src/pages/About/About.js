@@ -35,7 +35,7 @@ const MainContainer = styled.div`
     align-items: center;
     justify-content: center;
     color: #333;
-    padding: 20px; /* Adiciona espaço interno para telas pequenas */
+    padding: 20px; 
 `;
 
 const ContentContainer = styled.div`
@@ -51,8 +51,8 @@ const TextContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90%; /* Ajusta a largura em telas menores */
-    max-width: 900px; /* Limita a largura em telas maiores */
+    width: 90%; 
+    max-width: 900px; 
     gap: 20px;
     justify-content: center;
     color: #333;
@@ -69,21 +69,21 @@ const TextContainer = styled.div`
 
     @media (max-width: 768px) {
         h1 {
-            font-size: 2rem; /* Reduz o tamanho do título */
+            font-size: 2rem; 
         }
 
         p {
-            font-size: 1rem; /* Reduz o tamanho do texto */
+            font-size: 1rem; 
         }
     }
 
     @media (max-width: 480px) {
         h1 {
-            font-size: 1.8rem; /* Ajuste adicional para telas menores */
+            font-size: 1.8rem;
         }
 
         p {
-            font-size: 0.9rem; /* Reduz ainda mais para telas muito pequenas */
+            font-size: 0.9rem; 
         }
     }
 `;

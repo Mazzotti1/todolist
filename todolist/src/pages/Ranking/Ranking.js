@@ -51,7 +51,7 @@ const Ranking = () => {
     : null;
 
     return (
-        <MainContainer>
+        <MainContainer hasUserPosition={!isUserInTop10 && userRank}>
             <h1>Ranking</h1>
             <RankingList>
                 {top10.map((entry, index) => (
@@ -76,7 +76,7 @@ const Ranking = () => {
                 </UserPosition>
             )}
         </MainContainer>
-    );
+    );    
 };
 
 export default Ranking;
@@ -85,7 +85,7 @@ const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: ${({ hasUserPosition }) => (hasUserPosition ? 'flex-start' : 'center')};
     padding: 20px;
     height: 100vh;
     color: #333;
@@ -94,6 +94,13 @@ const MainContainer = styled.div`
     h1 {
         font-size: 2rem;
         margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+        padding: 10px;
+        h1 {
+            font-size: 1.5rem;
+        }
     }
 `;
 
@@ -153,5 +160,9 @@ const UserPosition = styled.div`
     margin-top: 20px;
     width: 100%;
     max-width: 600px;
+
+    @media (max-width: 768px) {
+        margin-top: 10px;
+    }
 `;
 
