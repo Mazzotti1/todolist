@@ -30,7 +30,6 @@ const getUsers = async (req, res) => {
         const users = await userService.getUsers();
         res.json(users);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: 'Erro ao buscar os usuários.' });
     }
 };
@@ -51,4 +50,25 @@ const login = async (req, res) => {
     }
 }
 
-export default { createUser, getUsers, login };
+const getUserById = async (req, res) => {
+    const { id } = req.query;
+
+    if (!id) {
+        return res.status(400).json({ error: 'O id do usuário é obrigatório.' });
+    }
+
+    try {
+        const user = await userService.getUserById(id);
+
+        if(user){
+            res.json(user);
+        }else{
+            res.status(400).json({ error: 'Resultado invalido.' });
+        }
+
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar o usuário.' });
+    }
+}
+
+export default { createUser, getUsers, login, getUserById};

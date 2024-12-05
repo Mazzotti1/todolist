@@ -8,7 +8,12 @@ export async function createUser(name, password, updatedAt) {
 }
 
 export async function getUsers() {
-    return await prisma.user.findMany();
+    return await prisma.user.findMany({
+        orderBy: {
+            score: 'desc', 
+        },
+        take: 10, 
+    });
 }
 
 export async function checkUsername(name) {
@@ -28,3 +33,23 @@ export async function login(name, password) {
 
     return isPasswordCorrect ? user : null;
 }
+
+export async function setUserScore(idUser, score){
+    await prisma.user.update({
+        where:{
+            id:idUser
+        },
+        data:{
+            score:score
+        }
+    })
+}
+
+export async function getUserById(id){
+    return await prisma.user.findMany({
+        where:{
+            id:id
+        }
+    })
+}
+

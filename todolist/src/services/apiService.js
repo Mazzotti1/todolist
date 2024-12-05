@@ -94,3 +94,30 @@ export const completeTask = async (id) => {
         throw error;
     }
 }
+
+export const getUserById = async () => {
+    try {
+        let session = JSON.parse(localStorage.getItem('session'));
+        let id = ''
+
+        if(session){
+            id = session.id;
+
+            const response = await api.get(`/user/byUser?id=${id}`);
+            return response.data;
+        }
+        return []
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getUsersRanking = async () => {
+    try {
+        const response = await api.get(`/user`);
+        console.log(response.data)
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
